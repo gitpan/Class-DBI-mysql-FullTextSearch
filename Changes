@@ -1,5 +1,9 @@
 Revision history 
 
+1.00   Wed Oct 27 2004
+	- Upped major version number
+	- Several tiny tweaks
+
 0.9   Tue Nov 11 2003
 	- DBIx::FullTextSearch doesn't like Column names being
 	  overloaded objects (Andrew McAlister) 

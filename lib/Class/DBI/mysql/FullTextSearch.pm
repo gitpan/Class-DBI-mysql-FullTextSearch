@@ -48,11 +48,16 @@ L<Class::DBI::mysql>. L<Class::DBI>. L<DBIx::FullTextSearch>.
 
 =head1 AUTHOR
 
-Tony Bowden and Marty Pauley. E<lt>tmtm@kasei.comE<gt>.
+Tony Bowden and Marty Pauley
+
+=head1 BUGS and QUERIES
+
+Please direct all correspondence regarding this module to:
+  bug-Class-DBI-mysql-FullTextSearch@rt.cpan.org
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001-03 Kasei. All rights reserved.
+Copyright (C) 2001-04 Kasei. All rights reserved.
 
 This module is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -60,17 +65,15 @@ it under the same terms as Perl itself.
 =cut
 
 use strict;
-use vars qw/$VERSION/;
-$VERSION = 0.09;
 
-use strict;
-use Exporter;
+require 5.006;
+our $VERSION = '1.00';
+
+use base 'Exporter';
 use DBIx::FullTextSearch;
 use DBIx::FullTextSearch::StopList;
 
-use vars qw/@ISA @EXPORT/;
-@ISA    = 'Exporter';
-@EXPORT = 'full_text_search';
+our @EXPORT = 'full_text_search';
 
 sub full_text_search { goto &make_searcher }
 

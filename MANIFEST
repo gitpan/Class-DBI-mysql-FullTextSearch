@@ -4,3 +4,4 @@ Makefile.PL
 lib/Class/DBI/mysql/FullTextSearch.pm
 t/01.t
 t/02.t
+META.yml                                 Module meta-data (added by MakeMaker)
