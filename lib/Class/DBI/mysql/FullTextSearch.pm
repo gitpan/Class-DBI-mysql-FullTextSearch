@@ -17,6 +17,8 @@ Class::DBI::mysql::FullTextSearch - Full Text Indexing for Class::DBI::mysql
   use Film;
 
   my @films = Film->mysearch('Godfather');
+  my @films = Film->mysearch('Godfather', { sort => 'title' });
+  my @films = Film->mysearch('Godfather', { nsort => 'year' });
 
 =head1 DESCRIPTION
 
@@ -31,7 +33,10 @@ and it will create your search method with the required name.
 
 Simple.
 
-For details on the syntax of the search arguments etc, see
+If you wish to order the resulting values you can supply a field by
+which we either 'sort' or 'n(umeric)sort' the results.
+
+For details on the syntax of the other search arguments etc, see
 L<DBIx::FullTextSearch>.
 
 Later versions will provide ways for you to override any of the defaults,
@@ -56,7 +61,7 @@ it under the same terms as Perl itself.
 
 use strict;
 use vars qw/$VERSION/;
-$VERSION = 0.02;
+$VERSION = 0.03;
 
 use strict;
 use Exporter;
@@ -78,8 +83,19 @@ sub make_searcher {
   no strict 'refs';
 
   *{"$callpkg\::$method"} = sub {
-    my ($class, $query) = @_;
-    map $class->retrieve($_), $handle->search($query);
+    my ($class, $query, $args) = @_;
+    my @results = map $class->retrieve($_), $handle->search($query);
+    if (my $sortby = $args->{'sort'}) {
+      @results = map $_->[0],
+        sort { $a->[1] cmp $b->[1] }
+          map [ $_, lc $_->$sortby() ], @results;
+    } elsif (my $nsortby = $args->{'nsort'}) {
+      @results = map $_->[0],
+        sort { $a->[1] <=> $b->[1] }
+          map [ $_, $_->$nsortby() ], @results;
+    }
+    return @results;
+     
   };
 
   *{"$callpkg\::_${method}_handle"} = sub { $handle };

@@ -1,8 +1,11 @@
 Revision history 
 
+0.3   Thu Feb 21 2002
+        - optional 'sort' and 'nsort' arguments
+
 0.02  Sun Oct 28 2001
         - index all existing records when creating index.
 
 0.01  Mon Oct  8 2001
-	- original version
+	      - original version
 

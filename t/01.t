@@ -2,7 +2,7 @@
 
 use strict;
 use vars qw/$TESTS/;
-BEGIN { $TESTS = 11; }
+BEGIN { $TESTS = 15; }
 
 use Test::More tests => $TESTS;
 
@@ -28,20 +28,33 @@ SKIP: {
   ok $sheep->_find_some_handle, 'DBIx::FullTextSearch';
 
   my @by_title = Sheep->find_some('genomics');
-  ok @by_title == 1, "Found an article by title: $by_title[0]";
+  is scalar @by_title, 1, "Found an article by title: $by_title[0]";
   my $found = $by_title[0];
   isa_ok $found => 'Sheep';
   is $found->id, $sheep->id, " the correct one";
 
   my @by_keywords = Sheep->find_some('circumcincta');
-  ok @by_keywords == 1, "Found an article by keyword";
+  is scalar @by_keywords, 1, "Found an article by keyword";
   is $by_keywords[0]->id, $sheep->id, " the correct one";
 
   $sheep->keywords("Haemonchus contortus");
-  ok $sheep->commit, "No more contortus";
+  ok $sheep->commit, "No more circumcincta";
 
   my @now = Sheep->find_some('circumcincta');
-  ok @now == 0, "So no-one interested in circumcincta any more :(";
+  is scalar @now, 0, "So no-one interested in circumcincta any more :(";
+
+  my $sheep2 = Sheep->create({
+    title    => 'Ars Magnifica',
+    keywords => 'Haemonchus extraordinus contortus',
+  });
+
+  my @t_sorted = Sheep->find_some('contortus', { sort => 'title' });
+  is scalar @t_sorted, 2, "Now two sheep";
+  is $t_sorted[0]->title, 'Ars Magnifica', "Ordered correctly by name";
+
+  my @n_sorted = Sheep->find_some('contortus', { sort => 'keywords' });
+  is scalar @n_sorted, 2, "Still two sheep";
+  is $n_sorted[0]->keywords, "Haemonchus contortus", "Ordered correctly by keywords";
 
   ok($sheep->_find_some_handle->drop, "Clean up index");
   ok($dbh->do("DROP TABLE $table"), "Clean up table");
