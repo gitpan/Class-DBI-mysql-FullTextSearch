@@ -56,7 +56,7 @@ it under the same terms as Perl itself.
 
 use strict;
 use vars qw/$VERSION/;
-$VERSION = 0.01;
+$VERSION = 0.02;
 
 use strict;
 use Exporter;
@@ -67,9 +67,7 @@ use vars qw/@ISA @EXPORT/;
 @ISA = 'Exporter';
 @EXPORT = 'full_text_search';
 
-sub full_text_search {
-  goto \&{__PACKAGE__ . "::make_searcher"};
-}
+sub full_text_search { goto &make_searcher }
   
 sub make_searcher {
   my $me = shift;
@@ -107,7 +105,7 @@ sub _create_handle {
   my ($class, $other, $method, $cols) = @_;
   ref($cols) eq "ARRAY" or warn "Columns should be an array ref, not $cols";
   $class->_check_for_stoplist($other);
-  DBIx::FullTextSearch->create(
+  my $handle = DBIx::FullTextSearch->create(
     $other->db_Main => "_fts_$method",
     frontend        => 'table',
     backend         => 'phrase',
@@ -117,6 +115,8 @@ sub _create_handle {
     column_id_name  => $other->primary,
     column_name     => $cols,
   );
+  $handle->index_document($_->id) for $other->retrieve_all;
+  return $handle;
 }
 
 sub _check_for_stoplist {

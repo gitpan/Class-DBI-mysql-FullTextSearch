@@ -1,5 +1,8 @@
 Revision history 
 
+0.02  Sun Oct 28 2001
+        - index all existing records when creating index.
+
 0.01  Mon Oct  8 2001
 	- original version
 
