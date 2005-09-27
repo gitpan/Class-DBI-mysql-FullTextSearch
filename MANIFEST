@@ -1,7 +1,11 @@
 Changes
-MANIFEST
-Makefile.PL
 lib/Class/DBI/mysql/FullTextSearch.pm
+Makefile.PL
+MANIFEST
+MANIFEST.SKIP
+META.yml			Module meta-data (added by MakeMaker)
+README
 t/01.t
 t/02.t
-META.yml                                 Module meta-data (added by MakeMaker)
+t/pod-coverage.t
+t/pod.t

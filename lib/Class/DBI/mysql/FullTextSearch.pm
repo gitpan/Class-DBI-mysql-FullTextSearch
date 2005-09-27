@@ -9,7 +9,7 @@ Class::DBI::mysql::FullTextSearch - Full Text Indexing for Class::DBI::mysql
   package Film;
   use Class::DBI::mysql::FullTextSearch;
 
-  __PACKAGE__->full_text_search('mysearch' => [qw/title director/];
+  __PACKAGE__->full_text_search('mysearch' => [qw/title director/]);
 
 
   package main;
@@ -27,14 +27,17 @@ with Class::DBI::mysql. It sets up lots of default values for you, handles
 all the updating of the index when you create, delete or edit values, 
 and provides a simple way for you to create your search method.
 
-You simply call 
+=head1 METHODS
+
+=head2 full_text_search
+
   Class->full_text_search('search_method_name' => [qw/columns to index/]);
-and it will create your search method with the required name.
 
-Simple.
+This creates your search method with the required name.
 
-If you wish to order the resulting values you can supply a field by
-which we either 'sort' or 'n(umeric)sort' the results.
+When calling the search method, if you wish to order the resulting values
+you can supply a field by which we either 'sort' or 'n(umeric)sort'
+the results.
 
 For details on the syntax of the other search arguments etc, see
 L<DBIx::FullTextSearch>.
@@ -57,7 +60,7 @@ Please direct all correspondence regarding this module to:
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001-04 Kasei. All rights reserved.
+Copyright (C) 2001-05 Kasei. All rights reserved.
 
 This module is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -67,7 +70,7 @@ it under the same terms as Perl itself.
 use strict;
 
 require 5.006;
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 use base 'Exporter';
 use DBIx::FullTextSearch;
@@ -75,9 +78,9 @@ use DBIx::FullTextSearch::StopList;
 
 our @EXPORT = 'full_text_search';
 
-sub full_text_search { goto &make_searcher }
+sub full_text_search { goto &_make_searcher }
 
-sub make_searcher {
+sub _make_searcher {
 	my $me      = shift;
 	my $callpkg = (caller)[0];
 	my $handle  = __PACKAGE__->_handle_for($callpkg, @_);
